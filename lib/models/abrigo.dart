@@ -1,40 +1,42 @@
 class Abrigo {
   final String id;
   final String nome;
-  final String contato;
-  final String localizacao;
   final String descricao;
-  final List<String> eventos;
+  final String endereco;
+  final String telefone;
+  final String email;
+  final String imageUrl;
 
   Abrigo({
     required this.id,
     required this.nome,
-    required this.contato,
-    required this.localizacao,
     required this.descricao,
-    required this.eventos,
+    required this.endereco,
+    required this.telefone,
+    required this.email,
+    required this.imageUrl,
   });
 
-  // Construtor para criar um Abrigo a partir de um mapa (JSON)
   factory Abrigo.fromJson(String id, Map<String, dynamic> json) {
     return Abrigo(
       id: id,
       nome: json['nome'],
-      contato: json['contato'],
-      localizacao: json['localizacao'],
       descricao: json['descricao'],
-      eventos: List<String>.from(json['eventos'] ?? []),
+      endereco: json['endereco'],
+      telefone: json['telefone'],
+      email: json['email'],
+      imageUrl: json['imageUrl'],
     );
   }
 
-  // Método para converter o Abrigo de volta para um mapa (JSON)
   Map<String, dynamic> toJson() {
     return {
       'nome': nome,
-      'contato': contato,
-      'localizacao': localizacao,
       'descricao': descricao,
-      'eventos': eventos,
+      'endereco': endereco,
+      'telefone': telefone,
+      'email': email,
+      'imageUrl': imageUrl,
     };
   }
 }

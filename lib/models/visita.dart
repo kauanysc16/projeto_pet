@@ -1,36 +1,42 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Visita {
   final String id;
-  final String petId;
-  final String abrigoId;
+  final String visitanteId;  // ID do usuário que está visitando
+  final String abrigoId;     // ID do abrigo
   final DateTime dataVisita;
-  final String nomeVisitante;
+  final String motivo;
+  final String observacoes;
 
   Visita({
     required this.id,
-    required this.petId,
+    required this.visitanteId,
     required this.abrigoId,
     required this.dataVisita,
-    required this.nomeVisitante,
+    required this.motivo,
+    required this.observacoes,
   });
 
-  // Construtor para criar uma Visita a partir de um mapa (JSON)
+  // Converte os dados do Firestore para o modelo Visita
   factory Visita.fromJson(String id, Map<String, dynamic> json) {
     return Visita(
-      id: id, // Agora o ID é passado como argumento
-      petId: json['petId'],
-      abrigoId: json['abrigoId'],
-      dataVisita: DateTime.parse(json['dataVisita']),
-      nomeVisitante: json['nomeVisitante'],
+      id: id,
+      visitanteId: json['visitanteId'] ?? '',
+      abrigoId: json['abrigoId'] ?? '',
+      dataVisita: (json['dataVisita'] as Timestamp).toDate(), // Converte Timestamp para DateTime
+      motivo: json['motivo'] ?? '',
+      observacoes: json['observacoes'] ?? '',
     );
   }
 
-  // Método para converter a Visita de volta para um mapa (JSON)
+  // Converte o modelo Visita para JSON para salvar no Firestore
   Map<String, dynamic> toJson() {
     return {
-      'petId': petId,
+      'visitanteId': visitanteId,
       'abrigoId': abrigoId,
-      'dataVisita': dataVisita.toIso8601String(),
-      'nomeVisitante': nomeVisitante,
+      'dataVisita': Timestamp.fromDate(dataVisita), // Converte DateTime para Timestamp
+      'motivo': motivo,
+      'observacoes': observacoes,
     };
   }
 }

@@ -2,39 +2,41 @@ class Pet {
   final String id;
   final String nome;
   final String raca;
-  final String urlImagem;
+  final int idade;
   final String descricao;
-  final String idade;
+  final String imageUrl;
+  final String abrigoId; // ID do abrigo
 
   Pet({
     required this.id,
     required this.nome,
     required this.raca,
-    required this.urlImagem,
-    required this.descricao,
     required this.idade,
+    required this.descricao,
+    required this.imageUrl,
+    required this.abrigoId,
   });
 
-  // Construtor para criar um Pet a partir de um mapa (Firestore)
-  factory Pet.fromFirestore(String id, Map<String, dynamic> json) {
+  factory Pet.fromMap(Map<String, dynamic> data, String id) {
     return Pet(
       id: id,
-      nome: json['nome'],
-      raca: json['raca'],
-      urlImagem: json['urlImagem'],
-      descricao: json['descricao'],
-      idade: json['idade'],
+      nome: data['nome'] ?? '',
+      raca: data['raca'] ?? '',
+      idade: data['idade'] ?? 0,
+      descricao: data['descricao'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+      abrigoId: data['abrigoId'] ?? '',
     );
   }
 
-  // Método para converter o Pet de volta para um mapa (para Firestore)
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'nome': nome,
       'raca': raca,
-      'urlImagem': urlImagem,
-      'descricao': descricao,
       'idade': idade,
+      'descricao': descricao,
+      'imageUrl': imageUrl,
+      'abrigoId': abrigoId,
     };
   }
 }

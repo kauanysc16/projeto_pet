@@ -1,3 +1,4 @@
+// controllers/visita_controller.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projeto_pet/models/visita.dart';
 
@@ -10,6 +11,7 @@ class VisitaController {
     try {
       // Adiciona os dados da visita no Firestore
       await _visitaCollection.add(visita.toJson());
+      print('Visita adicionada com sucesso!');
     } catch (e) {
       print('Erro ao adicionar visita: $e');
     }
@@ -19,6 +21,7 @@ class VisitaController {
   Future<void> updateVisita(String id, Visita visita) async {
     try {
       await _visitaCollection.doc(id).update(visita.toJson());
+      print('Visita atualizada com sucesso!');
     } catch (e) {
       print('Erro ao atualizar visita: $e');
     }
@@ -28,12 +31,13 @@ class VisitaController {
   Future<void> deleteVisita(String id) async {
     try {
       await _visitaCollection.doc(id).delete();
+      print('Visita deletada com sucesso!');
     } catch (e) {
       print('Erro ao deletar visita: $e');
     }
   }
 
-  // Busca uma visita específica
+  // Busca uma visita específica pelo ID
   Future<Visita> getVisita(String id) async {
     try {
       DocumentSnapshot doc = await _visitaCollection.doc(id).get();

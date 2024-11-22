@@ -2,58 +2,38 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projeto_pet/models/pet.dart';
 
 class PetController {
-  final CollectionReference _petCollection =
-      FirebaseFirestore.instance.collection('pets');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Adiciona um novo pet
-  Future<void> addPet(Pet pet) async {
-    try {
-      await _petCollection.add(pet.toJson());
-    } catch (e) {
-      print('Erro ao adicionar pet: $e');
-    }
-  }
-
-  // Atualiza os dados de um pet existente
-  Future<void> updatePet(String id, Pet pet) async {
-    try {
-      await _petCollection.doc(id).update(pet.toJson());
-    } catch (e) {
-      print('Erro ao atualizar pet: $e');
-    }
-  }
-
-  // Deleta um pet
-  Future<void> deletePet(String id) async {
-    try {
-      await _petCollection.doc(id).delete();
-    } catch (e) {
-      print('Erro ao deletar pet: $e');
-    }
-  }
-
-  // Busca um pet pelo ID
   Future<Pet> getPet(String id) async {
     try {
-      DocumentSnapshot doc = await _petCollection.doc(id).get();
+      DocumentSnapshot doc = await _firestore.collection('pets').doc(id).get();
       if (doc.exists) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return Pet.fromFirestore(doc.id, data); // Retorna um Pet a partir do Firestore
+        return Pet.fromMap(doc.data() as Map<String, dynamic>, doc.id);
       } else {
         throw Exception('Pet não encontrado');
       }
     } catch (e) {
-      print('Erro ao buscar pet: $e');
       rethrow;
     }
   }
 
-  // Obtém todos os pets em tempo real
   Stream<List<Pet>> getPets() {
-    return _petCollection.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Pet.fromFirestore(doc.id, doc.data() as Map<String, dynamic>);
-      }).toList();
+    return _firestore.collection('pets').snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Pet.fromMap(doc.data(), doc.id))
+          .toList();
     });
+  }
+
+  Future<void> addPet(Pet pet) {
+    return _firestore.collection('pets').add(pet.toMap());
+  }
+
+  Future<void> updatePet(Pet pet) {
+    return _firestore.collection('pets').doc(pet.id).update(pet.toMap());
+  }
+
+  Future<void> deletePet(String id) {
+    return _firestore.collection('pets').doc(id).delete();
   }
 }
